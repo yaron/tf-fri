@@ -34,9 +34,8 @@ m <!doctype html>
 							<ul>
 								<li>CLI</li>
 								<li>GIT</li>
-								<li>HTTP</li>
-								<li>XML/JSON</li>
 								<li>Tests</li>
+								<li>XML/JSON</li>
 								<li>Concurrency</li>
 							</ul>
 						</li>
@@ -118,8 +117,8 @@ func main() {
     Error() string
 }</code></pre></section></section>
 				<section><h3>Building a tool</h3></section>
-				<section>CLI: https://github.com/urfave/cli<br /><pre><code class="shell">go get github.com/urfave/cli</code></pre></section>
-				<section><section><pre><code class="go">import (
+				<section><section>CLI: https://github.com/urfave/cli<br /><pre><code class="shell">go get github.com/urfave/cli</code></pre></section>
+				<section><pre><code class="go">import (
 	"fmt"
 	"os"
 
@@ -176,7 +175,24 @@ GLOBAL OPTIONS:
 })
 
 if err != nil {fmt.Println(err)}</go></pre></section>
-</section>
+</section><section><section><code class="go"><pre>func TestAdd(t *testing.T) {
+	testTables := []struct {
+		a int
+		b int
+		t int
+	}{
+		{1, 1, 2},
+		{2, 2, 4},
+	}
+
+	for _, testTable := range testTables {
+		total := add(testTable.a, testTable.b)
+		if total != testTable.t {
+			t.Errorf("Sum of (%d+%d) was incorrect, got: %d, want: %d.", testTable.a, testTable.b, total, testTable.t)
+		}
+	}
+}
+</code></pre></section></section>
 			</div>
 		</div>
 
