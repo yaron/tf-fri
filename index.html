@@ -1,4 +1,4 @@
-<!doctype html>
+m <!doctype html>
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -117,9 +117,66 @@ func main() {
 <section><pre><code class="go">type error interface {
     Error() string
 }</code></pre></section></section>
-				<section><h3>Building a tool</h3>
+				<section><h3>Building a tool</h3></section>
+				<section>CLI: https://github.com/urfave/cli<br /><pre><code class="shell">go get github.com/urfave/cli</code></pre></section>
+				<section><section><pre><code class="go">import (
+	"fmt"
+	"os"
 
-				</section>
+	"github.com/urfave/cli"
+)</code></pre></section>
+<section><pre><code class="go">func main() {
+	app := cli.NewApp()
+	err := app.Run(os.Args)
+	if err != nil {
+		fmt.Println(err)
+	}
+}</code></pre></section>
+<section><pre><code class="go">	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "url, u",
+			Value: "https://github.com/yaron/go-ops.git",
+			Usage: "URL to git clone",
+		},
+	}</code></pre></section>
+<section><pre><code class="go">	app.Commands = []cli.Command{
+		{
+			Name:    "clone",
+			Aliases: []string{"c"},
+			Usage:   "Clone a git url",
+			Action: func(c *cli.Context) error {
+				fmt.Printf("URL: %q", c.String("url"))
+				return nil
+			},
+		},
+	}</code></pre></section>
+<section><pre><code>go run cli.go -h
+NAME:
+   cli - A new cli application
+
+USAGE:
+   cli [global options] command [command options] [arguments...]
+
+VERSION:
+   0.0.0
+
+COMMANDS:
+     clone, c  Clone a git url
+     help, h   Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --url value, -u value  URL to git clone (default: "https://github.com/yaron/go-ops.git")
+   --help, -h             show help
+   --version, -v          print the version
+</code></pre></section></section>
+<section><section>GIT: https://github.com/src-d/go-git (or os.exec)<br /><pre><code class="shell">go get gopkg.in/src-d/go-git.v4</code></pre></section>
+<section><pre><code class="go">_, err := git.PlainClone("/tmp/go-ops", false, &amp;git.CloneOptions{
+  URL:      "https://github.com/yaron/go-ops.git",
+  Progress: os.Stdout,
+})
+
+if err != nil {fmt.Println(err)}</go></pre></section>
+</section>
 			</div>
 		</div>
 
