@@ -1,68 +1,87 @@
-m <!doctype html>
+t
+m
+<!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Go for operations</title>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+	<title>Go for operations</title>
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section><h3>Go for operations</h3> <p><small>By Yaron Tal</small></p></section>
-				<section><h3>TODO</h3>
-					<ul>
-						<li>About me</li>
-						<li>Go basics</li>
-						<li>Building a tool
-							<ul>
-								<li>CLI</li>
-								<li>GIT</li>
-								<li>Tests</li>
-								<li>XML/JSON</li>
-								<li>Concurrency</li>
-							</ul>
-						</li>
-					</ul>
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
 
-				</section>
-				<section><ul>
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h3>Go for operations</h3>
+				<p><small>By Yaron Tal</small></p>
+			</section>
+			<section>
+				<h3>TODO</h3>
+				<ul>
+					<li>About me</li>
+					<li>Go basics</li>
+					<li>Building a tool
+						<ul>
+							<li>CLI</li>
+							<li>GIT</li>
+							<li>Tests</li>
+							<li>XML/JSON</li>
+							<li>Concurrency</li>
+						</ul>
+					</li>
+				</ul>
+
+			</section>
+			<section>
+				<ul>
 					<li>Slides: https://github.com/yaron/go-ops</li>
 					<li>Slides: https://yaron.github.io/go-ops</li>
 					<li>Code: https://github.com/yaron/go-ops-code</li>
-				</ul></section>
-				<section><h3>About me</h3><ul>
+				</ul>
+			</section>
+			<section>
+				<h3>About me</h3>
+				<ul>
 					<li>Yaron Tal</li>
 					<li>Web-Developer, sysadmin, Operations</li>
 					<li>KPN Appfactory</li>
 					<li>ytal.nl</li>
-				</ul></section>
-				<section><h3>Go basics</h3></section>
-				<section><pre><code class="go">package main
+				</ul>
+			</section>
+			<section>
+				<h3>Go basics</h3>
+			</section>
+			<section>
+				<pre><code class="go">package main
 
 import "fmt"
 
 func main() {
 	fmt.Println("Hello Linux")
-}</code></pre><pre><code class="console">$ go run hello.go
-Hello Linux</code></pre></section>
-				<section><pre><code class="go">package main
+}</code></pre>
+				<pre><code class="console">$ go run hello.go
+Hello Linux</code></pre>
+			</section>
+			<section>
+				<pre><code class="go">package main
 
 import "fmt"
 
@@ -73,11 +92,14 @@ func main() {
 
 func add(a, b int) int {
 	return a + b
-}</code></pre><pre><code class="console">$ go run function.go
+}</code></pre>
+				<pre><code class="console">$ go run function.go
 1+2=
 3
-</code></pre></section>
-<section><pre><code class="go">package main
+</code></pre>
+			</section>
+			<section>
+				<pre><code class="go">package main
 
 import "fmt"
 
@@ -93,8 +115,11 @@ func main() {
 	}
 	fmt.Println(config.APIKey)
 }
-</code></pre></section>
-<section><section><pre><code class="go">type myError struct { Message string }
+</code></pre>
+			</section>
+			<section>
+				<section>
+					<pre><code class="go">type myError struct { Message string }
 
 func (e myError) Error() string {
 	return e.Message
@@ -112,33 +137,49 @@ func main() {
 	}
 	fmt.Println(value)
 }
-</code></pre></section>
-<section><pre><code class="go">type error interface {
+</code></pre>
+				</section>
+				<section>
+					<pre><code class="go">type error interface {
     Error() string
-}</code></pre></section></section>
-				<section><h3>Building a tool</h3></section>
-				<section><section>CLI: https://github.com/urfave/cli<br /><pre><code class="shell">go get github.com/urfave/cli</code></pre></section>
-				<section><pre><code class="go">import (
+}</code></pre>
+				</section>
+			</section>
+			<section>
+				<h3>Building a tool</h3>
+			</section>
+			<section>
+				<section>CLI: https://github.com/urfave/cli<br />
+					<pre><code class="shell">go get github.com/urfave/cli</code></pre>
+				</section>
+				<section>
+					<pre><code class="go">import (
 	"fmt"
 	"os"
 
 	"github.com/urfave/cli"
-)</code></pre></section>
-<section><pre><code class="go">func main() {
+)</code></pre>
+				</section>
+				<section>
+					<pre><code class="go">func main() {
 	app := cli.NewApp()
 	err := app.Run(os.Args)
 	if err != nil {
 		fmt.Println(err)
 	}
-}</code></pre></section>
-<section><pre><code class="go">	app.Flags = []cli.Flag{
+}</code></pre>
+				</section>
+				<section>
+					<pre><code class="go">	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "url, u",
 			Value: "https://github.com/yaron/go-ops.git",
 			Usage: "URL to git clone",
 		},
-	}</code></pre></section>
-<section><pre><code class="go">	app.Commands = []cli.Command{
+	}</code></pre>
+				</section>
+				<section>
+					<pre><code class="go">	app.Commands = []cli.Command{
 		{
 			Name:    "clone",
 			Aliases: []string{"c"},
@@ -148,8 +189,10 @@ func main() {
 				return nil
 			},
 		},
-	}</code></pre></section>
-<section><pre><code>go run cli.go -h
+	}</code></pre>
+				</section>
+				<section>
+					<pre><code>$go run cli.go -h
 NAME:
    cli - A new cli application
 
@@ -167,15 +210,24 @@ GLOBAL OPTIONS:
    --url value, -u value  URL to git clone (default: "https://github.com/yaron/go-ops.git")
    --help, -h             show help
    --version, -v          print the version
-</code></pre></section></section>
-<section><section>GIT: https://github.com/src-d/go-git (or os.exec)<br /><pre><code class="shell">go get gopkg.in/src-d/go-git.v4</code></pre></section>
-<section><pre><code class="go">_, err := git.PlainClone("/tmp/go-ops", false, &amp;git.CloneOptions{
+</code></pre>
+				</section>
+			</section>
+			<section>
+				<section>GIT: https://github.com/src-d/go-git (or os.exec)<br />
+					<pre><code class="shell">go get gopkg.in/src-d/go-git.v4</code></pre>
+				</section>
+				<section>
+					<pre><code class="go">_, err := git.PlainClone("/tmp/go-ops", false, &amp;git.CloneOptions{
   URL:      "https://github.com/yaron/go-ops.git",
   Progress: os.Stdout,
 })
 
-if err != nil {fmt.Println(err)}</go></pre></section>
-</section><section><section><code class="go"><pre>func TestAdd(t *testing.T) {
+if err != nil {fmt.Println(err)}</code></pre>
+				</section>
+			</section>
+			<section><pre><code class="go">
+					func TestAdd(t *testing.T) {
 	testTables := []struct {
 		a int
 		b int
@@ -192,24 +244,91 @@ if err != nil {fmt.Println(err)}</go></pre></section>
 		}
 	}
 }
-</code></pre></section></section>
-			</div>
+</code></pre>
+			</section>
+			<section>
+				<section><pre><code class="xml">&lt;xml&gt;&#10;  &lt;album&gt;&#10;    &lt;title&gt;The Resistance&lt;/title&gt;&#10;    &lt;year&gt;2009&lt;/year&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Uprising&lt;/title&gt;&#10;      &lt;artist&gt;Muse&lt;/artist&gt;&#10;      &lt;duration&gt;5:05&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Resistance&lt;/title&gt;&#10;      &lt;artist&gt;Muse&lt;/artist&gt;&#10;      &lt;duration&gt;5:47&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;  &lt;/album&gt;&#10;&#10;  &lt;album&gt;&#10;    &lt;title&gt;Get Born&lt;/title&gt;&#10;    &lt;year&gt;2003&lt;/year&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Are You Gonna Be My Girl&lt;/title&gt;&#10;      &lt;artist&gt;Jet&lt;/artist&gt;&#10;      &lt;duration&gt;3:34&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Timothy&lt;/title&gt;&#10;      &lt;artist&gt;Jet&lt;/artist&gt;&#10;      &lt;duration&gt;4:30&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;  &lt;/album&gt;&#10;&lt;/xml&gt;
+</code></pre></section>
+				<section><pre><code class="go">
+type musicData struct {
+	Data []album `xml:"album"`
+}
+
+type album struct {
+	Title string `xml:"title"`
+	Year  int    `xml:"year"`
+	Songs []song `xml:"song"`
+}
+
+type song struct {
+	Title    string `xml:"title"`
+	Artist   string `xml:"artist"`
+	Duration string `xml:"duration"`
+}</code></pre></section>
+<section><pre><code class="go">	func main() {
+		url := "https://gist.githubusercontent.com/yaron/1a1df8cdc71612c24fedf8562f4c0083/raw/0b9fa04ecd96581abaea478eb6799c387d56aa16/gistfile1.txt"
+		resp, err := http.Get(url)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		defer resp.Body.Close()
+		</code></pre></section>
+		<section><pre><code class="go">
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	</code></pre></section>
+	<section><pre><code class="go">
+		var data musicData
+		err = xml.Unmarshal([]byte(body), &amp;data)
+		if err != nil {
+			fmt.Printf("error: %v", err)
+			return
+		}
+	</code></pre></section>
+	<section><pre><code class="go">
+for _, album := range data.Data {
+	for _, song := range album.Songs {
+	  fmt.Printf("%s by %s on album %s\n",
+			song.Title,
+			song.Artist,
+			album.Title
+		)
+	}
+}
+</code></pre></section>
+			</section>
 		</div>
+	</div>
 
-		<script src="js/reveal.js"></script>
+	<script src="js/reveal.js"></script>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
-			});
-		</script>
-	</body>
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			dependencies: [{
+					src: 'plugin/markdown/marked.js'
+				},
+				{
+					src: 'plugin/markdown/markdown.js'
+				},
+				{
+					src: 'plugin/notes/notes.js',
+					async: true
+				},
+				{
+					src: 'plugin/highlight/highlight.js',
+					async: true
+				}
+			]
+		});
+	</script>
+</body>
+
 </html>
