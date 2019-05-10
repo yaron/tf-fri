@@ -160,7 +160,8 @@ body {
   padding: 5px;
   overflow: auto;
   max-height: 500px;
-  word-wrap: normal; }
+  word-wrap: normal;
+  tab-size: 2;}
 
 .reveal table {
   margin: auto;
