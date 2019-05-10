@@ -48,17 +48,10 @@ m
 							<li>CLI</li>
 							<li>GIT</li>
 							<li>Tests</li>
-							<li>XML/JSON</li>
-							<li>Concurrency</li>
+							<li>HTTP/XML</li>
+							<li>Concurrency (Bonus)</li>
 						</ul>
 					</li>
-				</ul>
-			</section>
-			<section>
-				<ul>
-					<li>Slides: https://github.com/yaron/go-ops</li>
-					<li>Slides: https://yaron.github.io/go-ops</li>
-					<li>Code: https://github.com/yaron/go-ops-code</li>
 				</ul>
 			</section>
 			<section>
@@ -68,6 +61,13 @@ m
 					<li>Web-Developer, sysadmin, Operations</li>
 					<li>KPN Appfactory</li>
 					<li>ytal.nl</li>
+				</ul>
+			</section>
+			<section>
+				<ul>
+					<li>Slides: https://github.com/yaron/go-ops</li>
+					<li>Slides: https://yaron.github.io/go-ops</li>
+					<li>Code: https://github.com/yaron/go-ops-code</li>
 				</ul>
 			</section>
 			<section>
@@ -154,7 +154,7 @@ func main() {
 			</section>
 			<section>
 				<section>CLI: https://github.com/urfave/cli<br />
-					<pre><code class="shell">go get github.com/urfave/cli</code></pre>
+					<pre><code class="shell">$ go get github.com/urfave/cli</code></pre>
 				</section>
 				<section>
 					<pre><code class="go">import (
@@ -196,7 +196,7 @@ func main() {
 	}</code></pre>
 				</section>
 				<section>
-					<pre><code>$go run cli.go -h
+					<pre><code>$ go run cli.go -h
 NAME:
    cli - A new cli application
 
@@ -219,7 +219,7 @@ GLOBAL OPTIONS:
 			</section>
 			<section>
 				<section>GIT: https://github.com/src-d/go-git (or os.exec)<br />
-					<pre><code class="shell">go get gopkg.in/src-d/go-git.v4</code></pre>
+					<pre><code class="shell">$ go get gopkg.in/src-d/go-git.v4</code></pre>
 				</section>
 				<section>
 					<pre><code class="go">_, err := git.PlainClone("/tmp/go-ops", false, &amp;git.CloneOptions{
@@ -231,8 +231,7 @@ if err != nil {fmt.Println(err)}</code></pre>
 				</section>
 			</section>
 			<section>
-				<pre><code class="go">
-					func TestAdd(t *testing.T) {
+				<pre><code class="go">func TestAdd(t *testing.T) {
 	testTables := []struct {
 		a int
 		b int
@@ -258,8 +257,7 @@ if err != nil {fmt.Println(err)}</code></pre>
 
 				</section>
 				<section>
-					<pre><code class="go">
-type musicData struct {
+					<pre><code class="go">type musicData struct {
 	Data []album `xml:"album"`
 }
 
@@ -288,8 +286,7 @@ type song struct {
 		</code></pre>
 				</section>
 				<section>
-					<pre><code class="go">
-		body, err := ioutil.ReadAll(resp.Body)
+					<pre><code class="go">		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -297,8 +294,7 @@ type song struct {
 	</code></pre>
 				</section>
 				<section>
-					<pre><code class="go">
-		var data musicData
+					<pre><code class="go">		var data musicData
 		err = xml.Unmarshal([]byte(body), &amp;data)
 		if err != nil {
 			fmt.Printf("error: %v", err)
@@ -307,8 +303,7 @@ type song struct {
 	</code></pre>
 				</section>
 				<section>
-					<pre><code class="go">
-for _, album := range data.Data {
+					<pre><code class="go">for _, album := range data.Data {
 	for _, song := range album.Songs {
 	  fmt.Printf("%s by %s on album %s\n",
 			song.Title,
@@ -320,6 +315,111 @@ for _, album := range data.Data {
 </code></pre>
 				</section>
 			</section>
+			<section>
+				<section>
+				<pre><code class="go">func main() {
+	fmt.Println("I have a problem and I think concurrency"
+		+"is the solution")
+
+	sentence := []string{"And", "now", "I", "have",
+		"two", "problems", ".\n"}
+
+	for i := 0; i < len(sentence); i++ {
+		printFunc(" " + sentence[i])
+	}
+}
+
+func printFunc(s string) {
+	time.Sleep(
+		time.Duration(rand.Intn(1000)) * time.Microsecond
+	)
+	fmt.Print(s)
+}
+</code></pre>
+			</section>
+			<section>
+				<pre><code class="go">func main() {
+	fmt.Println("I have a problem and I think concurrency"
+		+"is the solution")
+
+	sentence := []string{"And", "now", "I", "have",
+		"two", "problems", ".\n"}
+
+	for i := 0; i < len(sentence); i++ {
+		go printFunc(" " + sentence[i])
+	}
+}
+
+func printFunc(s string) {
+	time.Sleep(
+		time.Duration(rand.Intn(1000)) * time.Microsecond
+	)
+	fmt.Print(s)
+}</code></pre>
+		</section>
+		<section>
+			<pre><code class="shell">$ go run concurrency.go
+I have a problem and I think concurrency is the solution
+</code></pre>
+		</section>
+		<section>
+			<pre><code class="go">var wg sync.WaitGroup
+
+func main() {
+	fmt.Println("I have a problem and I think concurrency"
+		+" is the solution")
+
+	sentence := []string{"And", "now", "I", "have",
+		"two", "problems", ".\n"}
+
+	wg.Add(len(sentence))
+	for i := 0; i < len(sentence); i++ {
+		go printFunc(" " + sentence[i])
+	}
+
+	fmt.Println("Now we wait")
+	wg.Wait()
+}
+</code></pre>
+	</section>
+	<section>
+		<pre><code class="go">
+func printFunc(s string) {
+	defer wg.Done()
+	time.Sleep(
+		time.Duration(rand.Intn(1000)) * time.Microsecond
+	)
+	fmt.Print(s)
+}</code></pre>
+	</section>
+	<section><pre>
+		<code class="shell">$ go run concurrency.go
+I have a problem and I think concurrency is the solution
+Now we wait
+ have .
+ I problems two And now% </code>
+	</pre></section>
+		</section>
+		<section>
+			<pre><code class="go">func main() {
+	fileLocations := make(chan string, 2)
+
+	go fetchFile("http://www.example.com/file1", fileLocations)
+	go fetchFile("http://www.example.com/file2", fileLocations)
+
+	file1 := &lt;-fileLocations
+	file2 := &lt;-fileLocations
+	fmt.Println(file1)
+	fmt.Println(file2)
+}
+
+func fetchFile(url string, location chan&lt;- string) {
+	time.Sleep(time.Duration(rand.Intn(1000)) * time.Microsecond)
+	urlSplit := strings.Split(url, "/")
+	location &lt;- "/tmp/filedir/" + urlSplit[len(urlSplit)-1]
+}
+</code></pre>
+		</section>
 		</div>
 	</div>
 
