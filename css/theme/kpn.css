@@ -11,7 +11,7 @@ section.has-light-background, section.has-light-background h1, section.has-light
  * GLOBAL STYLES
  *********************************************/
 body {
-  background: #FFF;
+  background: #FFF url("/kpn.png") no-repeat 95% 95% ;
   background-color: #FFF; }
 
 .reveal {
