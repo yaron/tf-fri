@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-	<title>Go for operations</title>
+	<title>Infrastructure as code with Terraform</title>
 
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/reveal.css">
@@ -28,7 +28,7 @@
 	<div class="reveal">
 		<div class="slides">
 			<section data-background="title-background.svg">
-				<h3 style="color:#FFF">Go for operations</h3>
+				<h3 style="color:#FFF">Infrastructure as code</h3><h3 style="color:#FFF"> with Terraform</h3>
 				<p><small style="color:#FFF">By Yaron Tal</small></p>
 				<aside class="notes">
 					S enabled speaker-notes<br />
@@ -37,19 +37,26 @@
 				</aside>
 			</section>
 			<section>
+				<h3>Preperation</h3>
+				<ul>
+					<li>ID</li>
+					<li>Password</li>
+					<li>Test</li>
+					<li>Slides: <a href="https://yaron.github.io/tf-fri">https://yaron.github.io/tf-fri</a></li>
+					<li>Slides source: <a href="https://github.com/yaron/tf-fri">https://github.com/yaron/tf-fri</a></li>
+					<li>Code: <a href="https://github.com/yaron/tf-fri-code">https://github.com/yaron/tf-fri-code</a></li>
+				</ul>
+			</section>
+			<section>
 				<h3>TODO</h3>
 				<ul>
 					<li>About Appfactory</li>
 					<li>About me</li>
-					<li>Go basics</li>
-					<li>Building a tool
-						<ul>
-							<li>CLI</li>
-							<li>GIT</li>
-							<li>Tests</li>
-							<li>HTTP/XML</li>
-							<li>Concurrency (Bonus)</li>
-						</ul>
+					<li>Knowledge test</li>
+					<li>Infrastructure as code</li>
+					<li>Terraform basics</li>
+					<li>Using terraform</li>
+					<li>Next steps</li>
 					</li>
 				</ul>
 			</section>
@@ -65,372 +72,105 @@
 				<h3>About me</h3>
 				<ul>
 					<li>Yaron Tal</li>
-					<li>Web-Developer, sysadmin, Operations</li>
+					<li>Web-Developer, sysadmin, Operations, Kubernetes</li>
 					<li>KPN Appfactory</li>
 					<li>ytal.nl</li>
 				</ul>
-				<aside class="notes">
-					VCD/VPC provider/tools
-				</aside>
 			</section>
 			<section>
+				<p>Quick quiz.</p>
+			</section>
+			<section>
+				<h3>Infrastructure as code</h3>
 				<ul>
-					<li>Slides: https://github.com/yaron/go-ops</li>
-					<li>Slides: https://yaron.github.io/go-ops</li>
-					<li>Code: https://github.com/yaron/go-ops-code</li>
+					<li>ARM, Cloudformation, Terraform</li>
+					<li>Automated tests, pipeline, peer reviews, modules</li>
+					<li>Reproducebility, reusability</li>
 				</ul>
 			</section>
 			<section>
-				<h3>Go basics</h3>
+				<img src="https://i.imgflip.com/3vuqab.jpg" />
 			</section>
 			<section>
-				<pre><code class="go">package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Hello Linux")
-}</code></pre>
-				<pre><code class="console">$ go run hello.go
-Hello Linux</code></pre>
-			</section>
-			<section>
-				<pre><code class="go">package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("1+2=")
-	fmt.Println(add(1, 2))
-}
-
-func add(a, b int) int {
-	return a + b
-}</code></pre>
-				<pre><code class="console">$ go run function.go
-1+2=
-3
-</code></pre>
-			</section>
-			<section>
-				<pre><code class="go">package main
-
-import "fmt"
-
-type myConfig struct {
-	APIKey string
-	Secret string
-}
-
-func main() {
-	config := myConfig{
-		APIKey: "wo9wmfojw4rfwsmef",
-		Secret: "so9jfsofjsgsg",
-	}
-	fmt.Println(config.APIKey)
-}
-</code></pre>
-			</section>
-			<section>
+				<h3>Terraform</h3>
 				<section>
-					<pre><code class="go">type myError struct { Message string }
-
-func (e myError) Error() string {
-	return e.Message
-}
-
-func errorFunc() (string, error) {
-	return "", myError{Message: "Sorry..."}
-}
-
-func main() {
-	value, err := errorFunc()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(value)
-}
-</code></pre>
+					<ul>
+						<li>Resouces in Yaml-isch HCL</li>
+						<li>Dependency graph</li>
+						<li>Provider -> API</li>
+					</ul>
 				</section>
 				<section>
-					<pre><code class="go">type error interface {
-    Error() string
+					<h4>HCL</h4>
+					<pre><code>
+resource "azurerm_resource_group" "myterraformgroup" {
+  name     = "myResourceGroup"
+  location = "westeurope"
+
+  tags = {
+    environment = "Terraform Demo"
+  }
 }</code></pre>
 				</section>
-			</section>
-			<section>
-				<h3>Building a tool</h3>
-			</section>
-			<section>
-				<section>CLI: https://github.com/urfave/cli<br />
-					<pre><code class="shell">$ go get github.com/urfave/cli</code></pre>
-				</section>
+				<section><img src="graph.png" /></section>
 				<section>
-					<pre><code class="go">import (
-	"fmt"
-	"os"
-
-	"github.com/urfave/cli"
-)</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">func main() {
-	app := cli.NewApp()
-	err := app.Run(os.Args)
-	if err != nil {
-		fmt.Println(err)
-	}
-}</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "url, u",
-			Value: "https://github.com/yaron/go-ops.git",
-			Usage: "URL to git clone",
-		},
-	}</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">	app.Commands = []cli.Command{
-		{
-			Name:    "clone",
-			Aliases: []string{"c"},
-			Usage:   "Clone a git url",
-			Action: func(c *cli.Context) error {
-				fmt.Printf("URL: %q", c.String("url"))
-				return nil
-			},
-		},
-	}</code></pre>
-				</section>
-				<section>
-					<pre><code>$ go run cli.go -h
-NAME:
-   cli - A new cli application
-
-USAGE:
-   cli [global options] command [command options] [arguments...]
-
-VERSION:
-   0.0.0
-
-COMMANDS:
-     clone, c  Clone a git url
-     help, h   Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --url value, -u value  URL to git clone (default: "https://github.com/yaron/go-ops.git")
-   --help, -h             show help
-   --version, -v          print the version
-</code></pre>
+					<h4>Provider</h4>
+					<ul>
+						<li>Read statefile and state</li>
+						<li>Calculate diff and dependencies</li>
+						<li>Call provider functions</li>
+						<li>Update statefile</li>
+					</ul>
+					<p>
+						<a target="_blank" href="https://github.com/terraform-providers/terraform-provider-azurerm/blob/master/azurerm/internal/services/compute/resource_arm_virtual_machine.go">Azure vm resource</a>
+					</p>
 				</section>
 			</section>
 			<section>
-				<section>GIT: https://github.com/src-d/go-git (or os.exec)<br />
-					<pre><code class="shell">$ go get gopkg.in/src-d/go-git.v4</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">_, err := git.PlainClone("/tmp/go-ops", false, &amp;git.CloneOptions{
-  URL:      "https://github.com/yaron/go-ops.git",
-  Progress: os.Stdout,
-})
-
-if err != nil {fmt.Println(err)}</code></pre>
-				</section>
+				<img src="deploy.jpeg" />
 			</section>
 			<section>
-				<pre><code class="go">func TestAdd(t *testing.T) {
-	testTables := []struct {
-		a int
-		b int
-		t int
-	}{
-		{1, 1, 2},
-		{2, 2, 4},
-	}
-
-	for _, testTable := range testTables {
-		total := add(testTable.a, testTable.b)
-		if total != testTable.t {
-			t.Errorf("Sum of (%d+%d) was incorrect, got: %d, want: %d.", testTable.a, testTable.b, total, testTable.t)
-		}
-	}
-}
-</code></pre>
+				<p>
+					Username: tfuser[id]<br />
+					Password: tfpass[id]<br />
+					Web-cli: [ip]:3000/wetty<br />
+					SSH: ssh tfuser[id]@[ip]
+				</p>
 			</section>
 			<section>
-				<section>
-					<pre><code class="xml">&lt;xml&gt;&#10;  &lt;album&gt;&#10;    &lt;title&gt;The Resistance&lt;/title&gt;&#10;    &lt;year&gt;2009&lt;/year&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Uprising&lt;/title&gt;&#10;      &lt;artist&gt;Muse&lt;/artist&gt;&#10;      &lt;duration&gt;5:05&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Resistance&lt;/title&gt;&#10;      &lt;artist&gt;Muse&lt;/artist&gt;&#10;      &lt;duration&gt;5:47&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;  &lt;/album&gt;&#10;&#10;  &lt;album&gt;&#10;    &lt;title&gt;Get Born&lt;/title&gt;&#10;    &lt;year&gt;2003&lt;/year&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Are You Gonna Be My Girl&lt;/title&gt;&#10;      &lt;artist&gt;Jet&lt;/artist&gt;&#10;      &lt;duration&gt;3:34&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;    &lt;song&gt;&#10;      &lt;title&gt;Timothy&lt;/title&gt;&#10;      &lt;artist&gt;Jet&lt;/artist&gt;&#10;      &lt;duration&gt;4:30&lt;/duration&gt;&#10;    &lt;/song&gt;&#10;  &lt;/album&gt;&#10;&lt;/xml&gt;
-</code></pre>
-
-				</section>
-				<section>
-					<pre><code class="go">type musicData struct {
-	Data []album `xml:"album"`
-}
-
-type album struct {
-	Title string `xml:"title"`
-	Year  int    `xml:"year"`
-	Songs []song `xml:"song"`
-}
-
-type song struct {
-	Title    string `xml:"title"`
-	Artist   string `xml:"artist"`
-	Duration string `xml:"duration"`
-}</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">	func main() {
-		url := "https://gist.githubusercontent.com/yaron/1a1df8cdc71612c24fedf8562f4c0083/raw/0b9fa04ecd96581abaea478eb6799c387d56aa16/gistfile1.txt"
-		resp, err := http.Get(url)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		defer resp.Body.Close()
-		</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">		var data musicData
-		err = xml.Unmarshal([]byte(body), &amp;data)
-		if err != nil {
-			fmt.Printf("error: %v", err)
-			return
-		}
-	</code></pre>
-				</section>
-				<section>
-					<pre><code class="go">for _, album := range data.Data {
-	for _, song := range album.Songs {
-	  fmt.Printf("%s by %s on album %s\n",
-			song.Title,
-			song.Artist,
-			album.Title
-		)
-	}
-}
-</code></pre>
-				</section>
+				<ul>
+					<li>terraform init</li>
+					<li>terraform apply</li>
+					<li>terraform state list</li>
+					<li>terraform state show azurerm_public_ip.myterraformpublicip (might need a second apply)</li>
+					<li>ssh to the ip</li>
+					<li>terraform destroy</li>
+				</ul>
 			</section>
 			<section>
-				<section>
-				<pre><code class="go">func main() {
-	fmt.Println("I have a problem and I think concurrency"
-		+"is the solution")
-
-	sentence := []string{"And", "now", "I", "have",
-		"two", "problems", ".\n"}
-
-	for i := 0; i < len(sentence); i++ {
-		printFunc(" " + sentence[i])
-	}
-}
-
-func printFunc(s string) {
-	time.Sleep(
-		time.Duration(rand.Intn(1000)) * time.Microsecond
-	)
-	fmt.Print(s)
-}
-</code></pre>
+				<ul>
+					<li><a href="https://www.terraform.io/docs/providers/azurerm/index.html">Provider</a></li>
+					<li><a href="https://www.terraform.io/docs/providers/azurerm/r/virtual_machine.html">Virtual machine resource</a></li>
+					
+				</ul>
 			</section>
 			<section>
-				<pre><code class="go">func main() {
-	fmt.Println("I have a problem and I think concurrency"
-		+"is the solution")
-
-	sentence := []string{"And", "now", "I", "have",
-		"two", "problems", ".\n"}
-
-	for i := 0; i < len(sentence); i++ {
-		go printFunc(" " + sentence[i])
-	}
-}
-
-func printFunc(s string) {
-	time.Sleep(
-		time.Duration(rand.Intn(1000)) * time.Microsecond
-	)
-	fmt.Print(s)
-}</code></pre>
-		</section>
-		<section>
-			<pre><code class="shell">$ go run concurrency.go
-I have a problem and I think concurrency is the solution
-</code></pre>
-		</section>
-		<section>
-			<pre><code class="go">var wg sync.WaitGroup
-
-func main() {
-	fmt.Println("I have a problem and I think concurrency"
-		+" is the solution")
-
-	sentence := []string{"And", "now", "I", "have",
-		"two", "problems", ".\n"}
-
-	wg.Add(len(sentence))
-	for i := 0; i < len(sentence); i++ {
-		go printFunc(" " + sentence[i])
-	}
-
-	fmt.Println("Now we wait")
-	wg.Wait()
-}
-</code></pre>
-	</section>
-	<section>
-		<pre><code class="go">
-func printFunc(s string) {
-	defer wg.Done()
-	time.Sleep(
-		time.Duration(rand.Intn(1000)) * time.Microsecond
-	)
-	fmt.Print(s)
-}</code></pre>
-	</section>
-	<section><pre>
-		<code class="shell">$ go run concurrency.go
-I have a problem and I think concurrency is the solution
-Now we wait
- have .
- I problems two And now </code>
-	</pre></section>
-		</section>
-		<section>
-			<pre><code class="go">func main() {
-	fileLocations := make(chan string, 2)
-
-	go fetchFile("http://www.example.com/file1", fileLocations)
-	go fetchFile("http://www.example.com/file2", fileLocations)
-
-	file1 := &lt;-fileLocations
-	file2 := &lt;-fileLocations
-	fmt.Println(file1)
-	fmt.Println(file2)
-}
-
-func fetchFile(url string, location chan&lt;- string) {
-	time.Sleep(time.Duration(rand.Intn(1000)) * time.Microsecond)
-	urlSplit := strings.Split(url, "/")
-	location &lt;- "/tmp/filedir/" + urlSplit[len(urlSplit)-1]
-}
-</code></pre>
-		</section>
-		</div>
+				<h3>Statefiles</h3>
+				<ul>
+					<li>Updated after every apply</li>
+					<li>Contains all state information</li>
+					<li>Needed for doing updates or destroy</li>
+					<li>Remote state</li>
+					<li>Working together, jenkins, locking and sensitive data</li>
+				</ul>
+			</section>
+			<section>
+				<h3>Further reading</h3>
+				<ul>
+					<li>Documentation: <a href="https://www.terraform.io/docs">https://www.terraform.io/docs</a></li>
+					<li>Tutorials: <a href="https://learn.hashicorp.com/terraform">https://learn.hashicorp.com/terraform</a></li>
+				</ul>
+			</section>
 	</div>
 
 	<script src="js/reveal.js"></script>
@@ -440,6 +180,7 @@ func fetchFile(url string, location chan&lt;- string) {
 		// - https://github.com/hakimel/reveal.js#configuration
 		// - https://github.com/hakimel/reveal.js#dependencies
 		Reveal.initialize({
+			slideNumber: true,
 			dependencies: [{
 					src: 'plugin/markdown/marked.js'
 				},
