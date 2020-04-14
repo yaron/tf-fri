@@ -148,13 +148,6 @@ resource "azurerm_resource_group" "myterraformgroup" {
 				</ul>
 			</section>
 			<section>
-				<ul>
-					<li><a href="https://www.terraform.io/docs/providers/azurerm/index.html">Provider</a></li>
-					<li><a href="https://www.terraform.io/docs/providers/azurerm/r/virtual_machine.html">Virtual machine resource</a></li>
-					
-				</ul>
-			</section>
-			<section>
 				<h3>Statefiles</h3>
 				<ul>
 					<li>Updated after every apply</li>
@@ -168,8 +161,65 @@ resource "azurerm_resource_group" "myterraformgroup" {
 				<h3>Further reading</h3>
 				<ul>
 					<li>Documentation: <a href="https://www.terraform.io/docs">https://www.terraform.io/docs</a></li>
+					<li><a href="https://www.terraform.io/docs/providers/azurerm/index.html">Provider</a></li>
+					<li><a href="https://www.terraform.io/docs/providers/azurerm/r/virtual_machine.html">Virtual machine resource</a></li>
 					<li>Tutorials: <a href="https://learn.hashicorp.com/terraform">https://learn.hashicorp.com/terraform</a></li>
 				</ul>
+			</section>
+			<section>
+				<section>
+					<h3>Next steps</h3>
+					<ul>
+						<li>Modules: <a href="https://registry.terraform.io/">https://registry.terraform.io/</a></li>
+						<li>Automated tests and runs (jenkins, bamboo, github actions)</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Variables</h3>
+					<pre>
+						<code>
+variable aws-location {
+	default = "eu-west-1"
+}	  
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h3>Outputs</h3>
+					<pre>
+						<code>
+output "workers.private_ips" {   
+	description = "private IP addresses of all regular worker nodes"
+														
+	value = [
+		"${concat(vcd_vm.green.*.network_config.0.ip_address, vcd_vm.blue.*.network_config.0.ip_address)}"
+	]                              
+}											
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre>
+						<code>
+module "harbor-lb" {
+	source  = "git::ssh://git@appfactory.git:7999/terraform-vcd-lb.git"
+	prefix  = "${format("%.4s", var.customer-prefix)}"
+	lb-name = "harbor"
+	dns-name = "harbor"
+	
+	external-ip     = "123.45.67.89"
+	internal-port-0 = 9034
+	external-port-0 = 80
+	pool-names      = ["${module.vcd.compute.stripped_hostnames}"]
+	pool-ips        = ["${module.vcd.compute.private_ips}"]
+	lb-monitor-id   = "${module.vcd.vcd-lb-http-monitor.id}"
+	app-profile-id  = "${module.vcd.vcd-lb-app-profile.id}"
+	transparent     = true
+	nsx-ip          = "172.16.14.1"
+}
+						</code>
+					</pre>
+				</section>
 			</section>
 	</div>
 
